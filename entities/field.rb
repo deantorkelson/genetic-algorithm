@@ -1,3 +1,5 @@
+require 'colorize'
+
 require_relative './agent'
 require_relative './food'
 

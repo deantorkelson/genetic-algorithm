@@ -1,3 +1,5 @@
+require 'colorize'
+
 module Entities
   class Agent
     attr_accessor :name
