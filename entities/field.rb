@@ -37,7 +37,13 @@ module Entities
     end
 
     def turn
-      # grid.
+      grid.each do |row|
+        row.each do |element|
+          # come up with some OOP-y solution
+          #
+          # element.action(grid)
+        end
+      end
     end
 
     def to_s
