@@ -15,11 +15,11 @@ module Entities
 
     def initialize_agents(num_agents)
       while num_agents > 0 do
-        row, col = rand(@grid.count), rand(@grid[0].count)
-        if @grid[row][col].nil?
+        row, col = rand(grid.count), rand(grid[0].count)
+        if grid[row][col].nil?
           agent = Agent.new(name: (num_agents + NAME_START_INDEX).chr)
-          @agents << agent
-          @grid[row][col] = agent
+          agents << agent
+          grid[row][col] = agent
           num_agents -= 1
         end
       end
@@ -27,17 +27,17 @@ module Entities
 
     def initialize_food(num_food)
       while num_food > 0 do
-        row, col = rand(@grid.count), rand(@grid[0].count)
-        if @grid[row][col].nil?
+        row, col = rand(grid.count), rand(grid[0].count)
+        if grid[row][col].nil?
           food = Food.new
-          @grid[row][col] = food
+          grid[row][col] = food
           num_food -= 1
         end
       end
     end
 
     def turn
-
+      # grid.
     end
 
     def to_s
