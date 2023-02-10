@@ -44,6 +44,7 @@ module Entities
           # come up with some OOP-y solution
           #
           # element.action(grid)
+          # should eventually just iterate over agents in list of speed
         end
       end
     end
