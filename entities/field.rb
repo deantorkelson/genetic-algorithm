@@ -41,9 +41,61 @@ module Entities
 
     def turn
       agents.each do |agent|
-        agent.action(grid)
-        # should eventually look at list sorted by speed
+        # how do we iterate down a list of agents sorted by speed but also get their coordinates?
+        # we know the fastest, so iterate until we find the fastest one and let it move
+        # go to next agent, repeat
+        @grid.each_with_index do |current_row, row_idx|
+          current_row.each_with_index do |_, col_idx|
+            next unless grid[row_idx][col_idx] == agent
+            agent.action(grid, row_idx, col_idx)
+            # steps that will happen
+            #   each agent will look around and decide on an action (needs grid and adjacent items (needs self))
+            #   each agent will perform that action, which needs to update grid state
+            mark_seen(row_idx, col_idx, agent.sight)
+          end
+        end
       end
+      # need to clear "seen" value for all tiles
+    end
+
+    def mark_seen(row, col, radius)
+      # this snippet provided by ChatGPT
+      neighbors = []
+
+      # iterate over cells within square area enclosing circle with radius n
+      (col-radius .. col+radius).each do |i|
+        (row-radius .. row+radius).each do |j|
+          # calculate distance between current cell and center point
+          distance = Math.sqrt((col - i)**2 + (row - j)**2)
+
+          # only include cell if distance is less than or equal to n
+          if distance <= n && i >= 0 && i < array.length && j >= 0 && j < array[i].length
+            array[i][j] = 'x'
+          end
+        end
+      end
+
+      return neighbors
+
+      # original
+      # def iterate_neighbors_within_radius(array, x, y, n)
+      #   neighbors = []
+      #
+      #   # iterate over cells within square area enclosing circle with radius n
+      #   (x - n .. x + n).each do |i|
+      #     (y - n .. y + n).each do |j|
+      #       # calculate distance between current cell and center point
+      #       distance = Math.sqrt((x - i)**2 + (y - j)**2)
+      #
+      #       # only include cell if distance is less than or equal to n
+      #       if distance <= n && i >= 0 && i < array.length && j >= 0 && j < array[i].length
+      #         neighbors << array[i][j]
+      #       end
+      #     end
+      #   end
+      #
+      #   return neighbors
+      # end
     end
 
     def to_s

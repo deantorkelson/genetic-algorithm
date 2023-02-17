@@ -7,7 +7,7 @@ module Entities
 
     attr_accessor :name, :color, :genes
 
-    def initialize(name:, genes: { sight: 1 })
+    def initialize(name:, genes: { sight: 1, move: 1 })
       @name = name
       @color = COLORS[rand(COLORS.size)]
       @genes = genes
@@ -15,9 +15,23 @@ module Entities
       # also speed (turn priority)
     end
 
+    def sight
+      @genes[:sight]
+    end
+
+    def action(grid, row, col)
+      # agent will look around and decide on an action
+      # MVP: moves in a random direction
+      # MVP: update grid state after moving
+    end
+
     def to_s
       # use modes (:bold, :italic, :underline, :blink, :swap) to display energy?
       @name.colorize(@color)
+    end
+
+    def ==(other)
+      @name == other.name
     end
   end
 end

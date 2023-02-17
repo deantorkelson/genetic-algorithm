@@ -8,3 +8,4 @@ class Director
 end
 
 director = Director.new(rows: 8, cols: 8, num_agents: 5, num_food: 10)
+
