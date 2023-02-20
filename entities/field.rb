@@ -58,8 +58,9 @@ module Entities
       # need to clear "seen" value for all tiles
     end
 
-    def mark_seen(col, row, radius)
+    def get_neighbors(col, row, radius)
       # this snippet suggested by ChatGPT (...with significant modifications to make it work)
+      neighbors = []
       (col - radius .. col + radius).each do |x|
         (row - radius .. row + radius).each do |y|
           # calculate distance between current cell and center point
@@ -67,30 +68,15 @@ module Entities
 
           # only include cell if distance is less than or equal to radius and is in grid
           if distance <= radius && x >= 0 && x < grid.length && y >= 0 && y < grid[x].length
-            grid[y][x].seen
+            neighbors << grid[y][x]
           end
         end
       end
+      neighbors
+    end
 
-      # original
-      # def iterate_neighbors_within_radius(array, x, y, n)
-      #   neighbors = []
-      #
-      #   # iterate over cells within square area enclosing circle with radius n
-      #   (x - n .. x + n).each do |i|
-      #     (y - n .. y + n).each do |j|
-      #       # calculate distance between current cell and center point
-      #       distance = Math.sqrt((x - i)**2 + (y - j)**2)
-      #
-      #       # only include cell if distance is less than or equal to n
-      #       if distance <= n && i >= 0 && i < array.length && j >= 0 && j < array[i].length
-      #         neighbors << array[i][j]
-      #       end
-      #     end
-      #   end
-      #
-      #   return neighbors
-      # end
+    def mark_seen(col, row, radius)
+      get_neighbors(col, row, radius).map(&:seen)
     end
 
     def to_s
