@@ -11,6 +11,7 @@ module Entities
       @name = name
       @color = COLORS[rand(COLORS.size)]
       @genes = genes
+      super()
       # eventually this should have sight (view distance)
       # also speed (turn priority)
     end
@@ -27,7 +28,7 @@ module Entities
 
     def to_s
       # use modes (:bold, :italic, :underline, :blink, :swap) to display energy?
-      @name.colorize(@color)
+      super(@name.colorize(@color))
     end
 
     def ==(other)

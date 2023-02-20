@@ -8,13 +8,15 @@ module Entities
       @seen_count = 0
     end
 
-    def see
+    def seen
       @seen_count += 1
     end
 
-    def to_s
-      # figure out how to convert seen_count to a bg on the printout
-      # .colorize(:color => :light_blue, :background => :red)
+    def to_s(str = '')
+      if @seen_count > 0
+        return str.colorize(:background => :red)
+      end
+      str
     end
   end
 end

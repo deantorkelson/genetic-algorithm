@@ -51,31 +51,26 @@ module Entities
             # steps that will happen
             #   each agent will look around and decide on an action (needs grid and adjacent items (needs self))
             #   each agent will perform that action, which needs to update grid state
-            mark_seen(row_idx, col_idx, agent.sight)
+            mark_seen(col_idx, row_idx, agent.sight)
           end
         end
       end
       # need to clear "seen" value for all tiles
     end
 
-    def mark_seen(row, col, radius)
-      # this snippet provided by ChatGPT
-      neighbors = []
-
-      # iterate over cells within square area enclosing circle with radius n
-      (col-radius .. col+radius).each do |i|
-        (row-radius .. row+radius).each do |j|
+    def mark_seen(col, row, radius)
+      # this snippet suggested by ChatGPT (...with significant modifications to make it work)
+      (col - radius .. col + radius).each do |x|
+        (row - radius .. row + radius).each do |y|
           # calculate distance between current cell and center point
-          distance = Math.sqrt((col - i)**2 + (row - j)**2)
+          distance = Math.sqrt((col - x)**2 + (row - y)**2)
 
-          # only include cell if distance is less than or equal to n
-          if distance <= n && i >= 0 && i < array.length && j >= 0 && j < array[i].length
-            array[i][j] = 'x'
+          # only include cell if distance is less than or equal to radius and is in grid
+          if distance <= radius && x >= 0 && x < grid.length && y >= 0 && y < grid[x].length
+            grid[y][x].seen
           end
         end
       end
-
-      return neighbors
 
       # original
       # def iterate_neighbors_within_radius(array, x, y, n)
