@@ -53,8 +53,8 @@ PLATFORMS
   x86_64-darwin-20
 
 DEPENDENCIES
-  colorize (~> 0.8.1)
-  pry (~> 0.14.2)
+  colorize
+  pry
   sorbet
   sorbet-runtime
   tapioca
