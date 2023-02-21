@@ -7,7 +7,7 @@ module Entities
 
     attr_accessor :name, :color, :genes
 
-    def initialize(name:, genes: { sight: 1, move: 1 })
+    def initialize(name:, genes: { sight: 2, move: 1 })
       @name = name
       @color = COLORS[rand(COLORS.size)]
       @genes = genes
@@ -27,8 +27,7 @@ module Entities
     end
 
     def to_s
-      # use modes (:bold, :italic, :underline, :blink, :swap) to display energy?
-      super(@name.colorize(@color))
+      super(@name.colorize(color: @color, mode: :bold))
     end
 
     def ==(other)

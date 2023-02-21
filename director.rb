@@ -11,5 +11,5 @@ class Director
   end
 end
 
-director = Director.new(rows: 8, cols: 8, num_agents: 2, num_food: 10)
+director = Director.new(rows: 8, cols: 8, num_agents: 5, num_food: 10)
 

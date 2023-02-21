@@ -3,6 +3,7 @@ require_relative './tile'
 module Entities
   class Tile
     attr_accessor :seen_count
+    BACKGROUNDS = [:default, :light_black, :white, :light_white]
 
     def initialize
       @seen_count = 0
@@ -13,10 +14,7 @@ module Entities
     end
 
     def to_s(str = '')
-      if @seen_count > 0
-        return str.colorize(:background => :red)
-      end
-      str
+      str.colorize(:background => BACKGROUNDS[[@seen_count, 4].min])
     end
   end
 end
