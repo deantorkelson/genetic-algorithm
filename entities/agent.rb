@@ -1,3 +1,4 @@
+# typed: true
 require 'colorize'
 require_relative './tile'
 

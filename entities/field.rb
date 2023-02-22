@@ -1,3 +1,4 @@
+# typed: true
 require 'colorize'
 
 require_relative './agent'
@@ -58,7 +59,7 @@ module Entities
       # need to clear "seen" value for all tiles
     end
 
-    def get_neighbors(col, row, radius)
+    def self.get_neighbors(grid, col, row, radius)
       # this snippet suggested by ChatGPT (...with significant modifications to make it work)
       neighbors = []
       (col - radius .. col + radius).each do |x|
@@ -76,7 +77,7 @@ module Entities
     end
 
     def mark_seen(col, row, radius)
-      get_neighbors(col, row, radius).map(&:seen)
+      Field.get_neighbors(grid, col, row, radius).map(&:seen)
     end
 
     def to_s
@@ -84,9 +85,7 @@ module Entities
       str = vertical_edge + "\n"
       grid.each do |row|
         row_s = "|"
-        row.each do |element|
-          row_s << element.to_s << " "
-        end
+        row.each { |element| row_s << element.to_s << " " }
         row_s << "|\n"
         str << row_s
       end
