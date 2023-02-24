@@ -25,6 +25,7 @@ module Entities
       # agent will look around and decide on an action
       # MVP: moves in a random direction
       # MVP: update grid state after moving
+      # eventual: would be cool to move in a less random way so it doesn't just go in circles until it dies
     end
 
     def to_s

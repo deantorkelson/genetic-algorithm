@@ -7,9 +7,18 @@ require_relative './food'
 
 module Entities
   class Field
+    extend T::Sig
+
     attr_accessor :grid, :agents
     NAME_START_INDEX = 64
 
+    sig do
+      params(
+        rows: Integer,
+        cols: Integer,
+        num_agents: Integer,
+        num_food: Integer).void
+    end
     def initialize(rows:, cols:, num_agents:, num_food:)
       @grid = Array.new(rows) { Array.new(cols) { EmptySquare.new } }
       @agents = []
@@ -17,6 +26,7 @@ module Entities
       initialize_food(num_food)
     end
 
+    sig { params(num_agents: Integer).void }
     def initialize_agents(num_agents)
       while num_agents > 0 do
         row, col = rand(grid.count), rand(grid[0].count)
@@ -29,6 +39,7 @@ module Entities
       end
     end
 
+    sig { params(num_food: Integer).void }
     def initialize_food(num_food)
       while num_food > 0 do
         row, col = rand(grid.count), rand(grid[0].count)
@@ -40,6 +51,7 @@ module Entities
       end
     end
 
+    sig { void }
     def turn
       agents.each do |agent|
         # how do we iterate down a list of agents sorted by speed but also get their coordinates?
@@ -76,10 +88,12 @@ module Entities
       neighbors
     end
 
+    sig { params(col: Integer, row: Integer, radius: Integer).returns(T::Array[Tile]) }
     def mark_seen(col, row, radius)
       Field.get_neighbors(grid, col, row, radius).map(&:seen)
     end
 
+    sig { returns(String) }
     def to_s
       vertical_edge = "+#{'- ' * (grid.size)}+"
       str = vertical_edge + "\n"
