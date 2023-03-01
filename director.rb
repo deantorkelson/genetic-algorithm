@@ -1,4 +1,7 @@
 # typed: true
+
+require 'sorbet-runtime'
+require 'pry'
 require_relative './entities/field'
 
 class Director
@@ -12,5 +15,5 @@ class Director
   end
 end
 
-director = Director.new(rows: 8, cols: 8, num_agents: 5, num_food: 10)
+director = Director.new(rows: 3, cols: 3, num_agents: 1, num_food: 1)
 

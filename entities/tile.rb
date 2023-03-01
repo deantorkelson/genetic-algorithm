@@ -10,8 +10,18 @@ module Entities
       @seen_count = 0
     end
 
+    def eliminate
+    end
+
     def seen
       @seen_count += 1
+    end
+
+    def unsee
+      if @seen_count == 0
+        puts 'Tile marked with negative seen'
+      end
+      @seen_count -= 1
     end
 
     def to_s(str = '')

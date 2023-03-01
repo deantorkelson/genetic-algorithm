@@ -54,24 +54,56 @@ module Entities
     sig { void }
     def turn
       agents.each do |agent|
-        # how do we iterate down a list of agents sorted by speed but also get their coordinates?
-        # we know the fastest, so iterate until we find the fastest one and let it move
-        # go to next agent, repeat
-        @grid.each_with_index do |current_row, row_idx|
+        # iterating over agents sorted by fastest, so we need to find where it is on the grid
+        grid.each_with_index do |current_row, row_idx|
           current_row.each_with_index do |_, col_idx|
             next unless grid[row_idx][col_idx] == agent
-            agent.action(grid, row_idx, col_idx)
-            # steps that will happen
-            #   each agent will look around and decide on an action (needs grid and adjacent items (needs self))
-            #   each agent will perform that action, which needs to update grid state
-            mark_seen(col_idx, row_idx, agent.sight)
+            binding.pry
+            agent_new_tile = agent.action(grid, row_idx, col_idx)
+            eliminate(agent_new_tile)
+            new_row_idx, new_col_idx = find(agent_new_tile)
+            grid[row_idx][col_idx] = EmptySquare.new
+            grid[new_row_idx][new_col_idx] = agent
+            mark_seen(new_row_idx, new_col_idx, agent.sight)
+            unmark_old_seen(row_idx, col_idx, agent.sight)
+
+            puts "---After agent #{agent.name}'s turn---"
+            self.to_s
+            sleep(3)
           end
         end
       end
       # need to clear "seen" value for all tiles
     end
 
-    def self.get_neighbors(grid, col, row, radius)
+    def eliminate(tile)
+      row_idx, col_idx = find(tile)
+      tile.eliminate
+      grid[row_idx][col_idx] = EmptySquare.new
+    end
+
+    def find(tile)
+      grid.each_with_index do |row, row_idx|
+        row.each_with_index do |_, col_idx|
+          next unless tile == grid[row_idx][col_idx]
+          return row_idx, col_idx
+        end
+      end
+      binding.pry
+      raise StandardError("Tile not found: #{tile.to_s}")
+    end
+
+    sig { params(row: Integer, col: Integer, radius: Integer).returns(T::Array[Tile]) }
+    def mark_seen(row, col, radius)
+      Field.get_neighbors(grid, row, col, radius).map(&:seen)
+    end
+
+    sig { params(row: Integer, col: Integer, radius: Integer).returns(T::Array[Tile]) }
+    def unmark_old_seen(row, col, radius)
+      Field.get_neighbors(grid, row, col, radius).map(&:unsee)
+    end
+
+    def self.get_neighbors(grid, row, col, radius, exclude_center = false)
       # this snippet suggested by ChatGPT (...with significant modifications to make it work)
       neighbors = []
       (col - radius .. col + radius).each do |x|
@@ -80,17 +112,14 @@ module Entities
           distance = Math.sqrt((col - x)**2 + (row - y)**2)
 
           # only include cell if distance is less than or equal to radius and is in grid
-          if distance <= radius && x >= 0 && x < grid.length && y >= 0 && y < grid[x].length
-            neighbors << grid[y][x]
+          if distance <= radius && !grid[y][x].nil?
+            unless exclude_center && (y == row && x == col)
+              neighbors << grid[y][x]
+            end
           end
         end
       end
       neighbors
-    end
-
-    sig { params(col: Integer, row: Integer, radius: Integer).returns(T::Array[Tile]) }
-    def mark_seen(col, row, radius)
-      Field.get_neighbors(grid, col, row, radius).map(&:seen)
     end
 
     sig { returns(String) }
