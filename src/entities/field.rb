@@ -1,10 +1,6 @@
 # typed: true
 require 'colorize'
 
-require_relative './agent'
-require_relative './empty'
-require_relative './food'
-
 module Entities
   class Field
     extend T::Sig
@@ -103,7 +99,7 @@ module Entities
       Field.get_neighbors(grid, row, col, radius).map(&:unsee)
     end
 
-    def self.get_neighbors(grid, row, col, radius, exclude_center = false)
+    def self.get_neighbors(grid, row, col, radius)
       # this snippet suggested by ChatGPT (...with significant modifications to make it work)
       neighbors = []
       (col - radius .. col + radius).each do |x|
@@ -112,10 +108,8 @@ module Entities
           distance = Math.sqrt((col - x)**2 + (row - y)**2)
 
           # only include cell if distance is less than or equal to radius and is in grid
-          if distance <= radius && !grid[y][x].nil?
-            unless exclude_center && (y == row && x == col)
-              neighbors << grid[y][x]
-            end
+          if distance <= radius && x >= 0 && x < grid.length && y >= 0 && y < grid[x].length
+            neighbors << grid[y][x]
           end
         end
       end

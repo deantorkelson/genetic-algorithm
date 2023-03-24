@@ -9,5 +9,11 @@ gem 'colorize'
 gem 'pry'
 gem 'sorbet-runtime'
 
-gem 'sorbet', :group => :development
-gem 'tapioca', require: false, :group => :development
+
+group :development do
+  gem 'sorbet'
+  gem 'tapioca'
+  gem "rspec", "~> 3.12"
+end
+
+gem "zeitwerk", "~> 2.6"

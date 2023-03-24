@@ -1,6 +1,5 @@
 # typed: true
 require 'colorize'
-require_relative './tile'
 
 module Entities
   class Agent < Tile
@@ -34,7 +33,7 @@ module Entities
       # eventual: would be cool to move in a less random way so it doesn't just go in circles until it dies
       neighbors = Field.get_neighbors(grid, row, col, sight)
       chosen_tile = nil
-      neighbors.shuffle.each do |tile|
+      neighbors.each do |tile|
         next if tile.is_a? EmptySquare
         chosen_tile = tile
         if tile.is_a? Food

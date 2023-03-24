@@ -2,7 +2,11 @@
 
 require 'sorbet-runtime'
 require 'pry'
-require_relative './entities/field'
+require 'zeitwerk'
+
+loader = Zeitwerk::Loader.new
+loader.push_dir("#{__dir__}/src")
+loader.setup
 
 class Director
   def initialize(rows:, cols:, num_agents:, num_food:)
@@ -15,5 +19,5 @@ class Director
   end
 end
 
-director = Director.new(rows: 3, cols: 3, num_agents: 1, num_food: 1)
-
+Director.new(rows: 3, cols: 3, num_agents: 1, num_food: 1)
+puts "done"

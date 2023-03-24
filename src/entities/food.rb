@@ -1,5 +1,4 @@
 # typed: true
-require_relative './tile'
 
 module Entities
   class Food < Tile
