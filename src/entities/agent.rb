@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 # typed: true
 require 'colorize'
 
 module Entities
   class Agent < Tile
-    COLORS = [:red, :green, :light_green, :yellow, :blue, :magenta, :light_magenta, :cyan, :light_cyan]
+    COLORS = %i[red green light_green yellow blue magenta light_magenta cyan light_cyan].freeze
 
     attr_accessor :alive, :name, :color, :genes
 
@@ -27,6 +29,7 @@ module Entities
 
     def action(grid, row, col)
       return unless alive
+
       # agent will look around and decide on an action
       # MVP: moves in a random direction
       # MVP: update grid state after moving
@@ -43,7 +46,7 @@ module Entities
         when Agent
           fight(tile)
         else
-          pp "Got unexpected tile: #{tile.to_s}"
+          pp "Got unexpected tile: #{tile}"
         end
       end
       chosen_tile
@@ -63,6 +66,7 @@ module Entities
 
     def ==(other)
       return false unless other.is_a? Agent
+
       @name == other.name
     end
   end

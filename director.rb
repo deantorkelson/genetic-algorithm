@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # typed: true
 
 require 'sorbet-runtime'
@@ -20,4 +22,4 @@ class Director
 end
 
 Director.new(rows: 3, cols: 3, num_agents: 1, num_food: 1)
-puts "done"
+puts 'done'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # typed: true
 require 'colorize'
 
@@ -6,6 +8,7 @@ module Entities
     extend T::Sig
 
     attr_accessor :grid, :agents
+
     NAME_START_INDEX = 64
 
     sig do
@@ -13,7 +16,8 @@ module Entities
         rows: Integer,
         cols: Integer,
         num_agents: Integer,
-        num_food: Integer).void
+        num_food: Integer
+      ).void
     end
     def initialize(rows:, cols:, num_agents:, num_food:)
       @grid = Array.new(rows) { Array.new(cols) { EmptySquare.new } }
@@ -24,26 +28,28 @@ module Entities
 
     sig { params(num_agents: Integer).void }
     def initialize_agents(num_agents)
-      while num_agents > 0 do
-        row, col = rand(grid.count), rand(grid[0].count)
-        if grid[row][col].is_a? EmptySquare
-          agent = Agent.new(name: (num_agents + NAME_START_INDEX).chr)
-          agents << agent
-          grid[row][col] = agent
-          num_agents -= 1
-        end
+      while num_agents.positive?
+        row = rand(grid.count)
+        col = rand(grid[0].count)
+        next unless grid[row][col].is_a? EmptySquare
+
+        agent = Agent.new(name: (num_agents + NAME_START_INDEX).chr)
+        agents << agent
+        grid[row][col] = agent
+        num_agents -= 1
       end
     end
 
     sig { params(num_food: Integer).void }
     def initialize_food(num_food)
-      while num_food > 0 do
-        row, col = rand(grid.count), rand(grid[0].count)
-        if grid[row][col].is_a? EmptySquare
-          food = Food.new
-          grid[row][col] = food
-          num_food -= 1
-        end
+      while num_food.positive?
+        row = rand(grid.count)
+        col = rand(grid[0].count)
+        next unless grid[row][col].is_a? EmptySquare
+
+        food = Food.new
+        grid[row][col] = food
+        num_food -= 1
       end
     end
 
@@ -54,6 +60,7 @@ module Entities
         grid.each_with_index do |current_row, row_idx|
           current_row.each_with_index do |_, col_idx|
             next unless grid[row_idx][col_idx] == agent
+
             agent_new_tile = agent.action(grid, row_idx, col_idx)
             eliminate(agent_new_tile)
             new_row_idx, new_col_idx = find(agent_new_tile)
@@ -63,7 +70,7 @@ module Entities
             unmark_old_seen(row_idx, col_idx, agent.sight)
 
             puts "---After agent #{agent.name}'s turn---"
-            self.to_s
+            to_s
             sleep(3)
           end
         end
@@ -81,10 +88,11 @@ module Entities
       grid.each_with_index do |row, row_idx|
         row.each_with_index do |_, col_idx|
           next unless tile == grid[row_idx][col_idx]
+
           return row_idx, col_idx
         end
       end
-      raise StandardError("Tile not found: #{tile.to_s}")
+      raise StandardError("Tile not found: #{tile}")
     end
 
     sig { params(row: Integer, col: Integer, radius: Integer).returns(T::Array[Tile]) }
@@ -100,15 +108,13 @@ module Entities
     def self.get_neighbors(grid, row, col, radius)
       # this snippet suggested by ChatGPT (...with significant modifications to make it work)
       neighbors = []
-      (col - radius .. col + radius).each do |x|
-        (row - radius .. row + radius).each do |y|
+      (col - radius..col + radius).each do |x|
+        (row - radius..row + radius).each do |y|
           # calculate distance between current cell and center point
           distance = Math.sqrt((col - x)**2 + (row - y)**2)
 
           # only include cell if distance is less than or equal to radius and is in grid
-          if distance <= radius && x >= 0 && x < grid.length && y >= 0 && y < grid[x].length
-            neighbors << grid[y][x]
-          end
+          neighbors << grid[y][x] if distance <= radius && x >= 0 && x < grid.length && y >= 0 && y < grid[x].length
         end
       end
       neighbors
@@ -116,11 +122,11 @@ module Entities
 
     sig { returns(String) }
     def to_s
-      vertical_edge = "+#{'- ' * (grid.size)}+"
-      str = vertical_edge + "\n"
+      vertical_edge = "+#{'- ' * grid.size}+"
+      str = "#{vertical_edge}\n"
       grid.each do |row|
-        row_s = "|"
-        row.each { |element| row_s << element.to_s << " " }
+        row_s = '|'
+        row.each { |element| row_s << element.to_s << ' ' }
         row_s << "|\n"
         str << row_s
       end

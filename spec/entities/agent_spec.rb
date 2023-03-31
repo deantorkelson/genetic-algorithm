@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require_relative '../spec_helper'
 
 describe ::Entities::Agent do
   describe '.action' do
     let(:agent) { ::Entities::Agent.new(name: 'A', genes: genes) }
-    let(:genes) { { sight: 1, move: 1} }
+    let(:genes) { { sight: 1, move: 1 } }
     let(:grid) { Array.new(3) { Array.new(3) { EmptySquare.new } } }
 
     context 'when agent is dead' do
@@ -19,19 +21,15 @@ describe ::Entities::Agent do
         expect(agent).to receive(:eat)
         expect(agent.action([], 0, 0))
       end
-
     end
 
     context 'when next tile is another Agent' do
-
     end
 
     context 'when next tile is self' do
-
     end
 
     context 'when there is no action to be taken' do
-
     end
   end
 end
