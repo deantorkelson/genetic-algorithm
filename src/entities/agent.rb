@@ -35,10 +35,12 @@ module Entities
       chosen_tile = nil
       neighbors.each do |tile|
         next if tile.is_a? EmptySquare
+
         chosen_tile = tile
-        if tile.is_a? Food
+        case tile
+        when Food
           eat
-        elsif tile.is_a? Agent
+        when Agent
           fight(tile)
         else
           pp "Got unexpected tile: #{tile.to_s}"

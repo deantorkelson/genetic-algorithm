@@ -16,7 +16,8 @@ describe ::Entities::Agent do
     context 'when next tile is a Food' do
       it 'eats the food' do
         allow(Field).to receive(:get_neighbors).and_return([EmptySquare.new, Food.new])
-
+        expect(agent).to receive(:eat)
+        expect(agent.action([], 0, 0))
       end
 
     end

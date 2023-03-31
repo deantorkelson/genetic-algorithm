@@ -54,7 +54,6 @@ module Entities
         grid.each_with_index do |current_row, row_idx|
           current_row.each_with_index do |_, col_idx|
             next unless grid[row_idx][col_idx] == agent
-            binding.pry
             agent_new_tile = agent.action(grid, row_idx, col_idx)
             eliminate(agent_new_tile)
             new_row_idx, new_col_idx = find(agent_new_tile)
@@ -85,7 +84,6 @@ module Entities
           return row_idx, col_idx
         end
       end
-      binding.pry
       raise StandardError("Tile not found: #{tile.to_s}")
     end
 
