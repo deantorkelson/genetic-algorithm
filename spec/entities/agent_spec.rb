@@ -13,11 +13,19 @@ describe ::Entities::Agent do
       end
     end
 
-    context 'when chosen tile is a Food' do
+    context 'when next tile is a Food' do
+      it 'eats the food' do
+        allow(Field).to receive(:get_neighbors).and_return([EmptySquare.new, Food.new])
+
+      end
 
     end
 
-    context 'when chosen tile is another Agent' do
+    context 'when next tile is another Agent' do
+
+    end
+
+    context 'when next tile is self' do
 
     end
 
