@@ -5,20 +5,11 @@ require 'colorize'
 
 module Entities
   class Field
-    extend T::Sig
 
     attr_accessor :grid, :agents
 
     NAME_START_INDEX = 64
 
-    sig do
-      params(
-        rows: Integer,
-        cols: Integer,
-        num_agents: Integer,
-        num_food: Integer
-      ).void
-    end
     def initialize(rows:, cols:, num_agents:, num_food:)
       @grid = Array.new(rows) { Array.new(cols) { EmptySquare.new } }
       @agents = []
@@ -26,7 +17,6 @@ module Entities
       initialize_food(num_food)
     end
 
-    sig { params(num_agents: Integer).void }
     def initialize_agents(num_agents)
       while num_agents.positive?
         row = rand(grid.count)
@@ -40,7 +30,6 @@ module Entities
       end
     end
 
-    sig { params(num_food: Integer).void }
     def initialize_food(num_food)
       while num_food.positive?
         row = rand(grid.count)
@@ -53,7 +42,6 @@ module Entities
       end
     end
 
-    sig { void }
     def turn
       agents.each do |agent|
         # iterating over agents sorted by fastest, so we need to find where it is on the grid
@@ -95,12 +83,10 @@ module Entities
       raise StandardError("Tile not found: #{tile}")
     end
 
-    sig { params(row: Integer, col: Integer, radius: Integer).returns(T::Array[Tile]) }
     def mark_seen(row, col, radius)
       Field.get_neighbors(grid, row, col, radius).map(&:seen)
     end
 
-    sig { params(row: Integer, col: Integer, radius: Integer).returns(T::Array[Tile]) }
     def unmark_old_seen(row, col, radius)
       Field.get_neighbors(grid, row, col, radius).map(&:unsee)
     end
@@ -120,7 +106,6 @@ module Entities
       neighbors
     end
 
-    sig { returns(String) }
     def to_s
       vertical_edge = "+#{'- ' * grid.size}+"
       str = "#{vertical_edge}\n"
@@ -130,7 +115,7 @@ module Entities
         row_s << "|\n"
         str << row_s
       end
-      str << vertical_edge << "\n"
+      str + vertical_edge + "\n"
     end
   end
 end

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# typed: true
-
 module Entities
   class Tile
     attr_accessor :seen_count
