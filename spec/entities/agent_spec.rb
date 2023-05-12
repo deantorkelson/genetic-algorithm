@@ -31,14 +31,29 @@ describe Entities::Agent do
       it 'fights the agent' do
         allow(Entities::Field).to receive(:get_neighbors).and_return([Entities::EmptySquare.new, other])
         expect(agent).to receive(:fight).with(other)
-        expect(agent.action([], 0, 0)).to eq('Z')
+        chosen_tile = agent.action([], 0, 0)
+        expect(chosen_tile).to eq(other)
       end
     end
 
-    context 'when next tile is self' do
+    context 'when encountering self' do
+      it 'moves to a random tile within range' do
+        tiles = [Entities::EmptySquare.new, agent]
+        allow(Entities::Field).to receive(:get_neighbors).and_return(tiles)
+        expect(agent).not_to receive(:fight)
+        chosen_tile = agent.action([], 0, 0)
+        expect(tiles.include?(chosen_tile)).to be_truthy
+      end
     end
 
     context 'when there is no action to be taken' do
+      it 'moves to a random tile within range' do
+        tiles = Array.new(9) { Entities::EmptySquare.new }
+        allow(Entities::Field).to receive(:get_neighbors).and_return(tiles)
+        expect(agent).not_to receive(:fight)
+        chosen_tile = agent.action([], 1, 1)
+        expect(tiles.include?(chosen_tile)).to be_truthy
+      end
     end
   end
 end

@@ -91,6 +91,7 @@ module Entities
       Field.get_neighbors(grid, row, col, radius).map(&:unsee)
     end
 
+    # gets neighbors in a plus/diamond shape, not square
     def self.get_neighbors(grid, row, col, radius)
       # this snippet suggested by ChatGPT (...with significant modifications to make it work)
       neighbors = []
