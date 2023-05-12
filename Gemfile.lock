@@ -13,6 +13,8 @@ GEM
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
+    pry-nav (1.0.0)
+      pry (>= 0.9.10, < 0.15)
     rbi (0.0.16)
       ast
       parser (>= 2.6.4.0)
@@ -71,6 +73,7 @@ PLATFORMS
 DEPENDENCIES
   colorize
   pry
+  pry-nav
   rspec (~> 3.12)
   sorbet
   sorbet-runtime

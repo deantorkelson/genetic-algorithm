@@ -45,27 +45,27 @@ module Entities
     def turn
       agents.each do |agent|
         # iterating over agents sorted by fastest, so we need to find where it is on the grid
-        grid.each_with_index do |current_row, row_idx|
-          current_row.each_with_index do |_, col_idx|
-            next unless grid[row_idx][col_idx] == agent
+        row_idx, col_idx = find(agent)
 
-            agent_new_tile = agent.action(grid, row_idx, col_idx)
-            eliminate(agent_new_tile)
-            new_row_idx, new_col_idx = find(agent_new_tile)
-            grid[row_idx][col_idx] = EmptySquare.new
-            grid[new_row_idx][new_col_idx] = agent
-            mark_seen(new_row_idx, new_col_idx, agent.sight)
-            unmark_old_seen(row_idx, col_idx, agent.sight)
+        agent_new_tile = agent.action(grid, row_idx, col_idx)
 
-            puts "---After agent #{agent.name}'s turn---"
-            to_s
-            sleep(3)
-          end
-        end
+        # move Agent to new tile, eliminating whatever's there
+        new_row_idx, new_col_idx = find(agent_new_tile)
+        eliminate(agent_new_tile)
+        grid[row_idx][col_idx] = EmptySquare.new
+        grid[new_row_idx][new_col_idx] = agent
+
+        # mark new tiles as seen, unmark old tiles
+        mark_seen(new_row_idx, new_col_idx, agent.sight)
+        unmark_old_seen(row_idx, col_idx, agent.sight)
+
+        puts "---After agent #{agent.name}'s turn---"
+        to_s
+        sleep(2)
       end
-      # need to clear "seen" value for all tiles
     end
 
+    # eliminates a tile (does nothing unless it's an Agent) and then clears the space
     def eliminate(tile)
       row_idx, col_idx = find(tile)
       tile.eliminate
@@ -80,6 +80,7 @@ module Entities
           return row_idx, col_idx
         end
       end
+      binding.pry
       raise StandardError("Tile not found: #{tile}")
     end
 
@@ -108,15 +109,10 @@ module Entities
     end
 
     def to_s
-      vertical_edge = "+#{'- ' * grid.size}+"
-      str = "#{vertical_edge}\n"
-      grid.each do |row|
-        row_s = '|'
-        row.each { |element| row_s << element.to_s << ' ' }
-        row_s << "|\n"
-        str << row_s
-      end
-      str + vertical_edge + "\n"
+      spaced_dashes = Array.new(grid.size) { '-' }.join(' ')
+      vertical_edge = "+#{spaced_dashes}+\n"
+      printed_grid = grid.map { |row| "|#{row.map(&:to_s).join(' ')}|\n" }.join
+      "#{vertical_edge}#{printed_grid}#{vertical_edge}"
     end
   end
 end
