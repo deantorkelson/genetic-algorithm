@@ -15,6 +15,7 @@ module Entities
       @agents = []
       initialize_agents(num_agents)
       initialize_food(num_food)
+      initialize_seen
     end
 
     def initialize_agents(num_agents)
@@ -42,6 +43,13 @@ module Entities
       end
     end
 
+    def initialize_seen
+      agents.each do |agent|
+        row, col = find(agent)
+        mark_seen(row, col, agent.sight)
+      end
+    end
+
     def turn
       agents.each do |agent|
         # iterating over agents sorted by fastest, so we need to find where it is on the grid
@@ -51,8 +59,8 @@ module Entities
 
         # move Agent to new tile, eliminating whatever's there
         new_row_idx, new_col_idx = find(agent_new_tile)
-        eliminate(agent_new_tile)
-        grid[row_idx][col_idx] = EmptySquare.new
+        agent_new_tile.eliminate
+        clear(row_idx, col_idx)
         grid[new_row_idx][new_col_idx] = agent
 
         # mark new tiles as seen, unmark old tiles
@@ -60,16 +68,14 @@ module Entities
         unmark_old_seen(row_idx, col_idx, agent.sight)
 
         puts "---After agent #{agent.name}'s turn---"
-        to_s
-        sleep(2)
+        puts to_s
+        sleep(1)
       end
     end
 
-    # eliminates a tile (does nothing unless it's an Agent) and then clears the space
-    def eliminate(tile)
-      row_idx, col_idx = find(tile)
-      tile.eliminate
-      grid[row_idx][col_idx] = EmptySquare.new
+    # clears out a tile while keeping its "seen" value
+    def clear(row, col)
+      grid[row][col] = EmptySquare.new(seen_count: grid[row][col].seen_count)
     end
 
     def find(tile)
@@ -80,7 +86,6 @@ module Entities
           return row_idx, col_idx
         end
       end
-      binding.pry
       raise StandardError("Tile not found: #{tile}")
     end
 
