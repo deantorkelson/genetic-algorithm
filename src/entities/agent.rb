@@ -7,14 +7,19 @@ module Entities
 
     attr_accessor :alive, :name, :color, :genes
 
-    def initialize(name:, genes: { sight: 2, move: 1 })
+    def initialize(name:, seed_genes: { sight: 2 })
+      @alive = true
       @name = name
       @color = COLORS[rand(COLORS.size)]
-      @genes = genes
-      @alive = true
+      initialize_genes(seed_genes)
       super()
       # eventually this should have sight (view distance)
       # also speed (turn priority)
+    end
+
+    def initialize_genes(seed_genes)
+      @genes = seed_genes
+      # TODO - add energy, this will enable eat and fight
     end
 
     def sight

@@ -5,6 +5,7 @@
 module Entities
   class EmptySquare < Tile
     def initialize(seen_count: 0)
+      super()
       @seen_count = seen_count
     end
 
