@@ -10,7 +10,7 @@ loader = Zeitwerk::Loader.new
 loader.push_dir("#{__dir__}/src")
 loader.setup
 
-TURNS = 6
+TURNS = 10
 
 class Director
   def initialize(rows:, cols:, num_agents:, num_food:)
@@ -27,5 +27,5 @@ class Director
   end
 end
 
-Director.new(rows: 9, cols: 9, num_agents: 1, num_food: 6)
+Director.new(rows: 10, cols: 10, num_agents: 1, num_food: 10)
 puts 'done'
