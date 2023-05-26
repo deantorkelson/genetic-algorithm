@@ -8,7 +8,7 @@ module Entities
 
     attr_accessor :grid, :agents
 
-    NAME_START_INDEX = 64
+    NAME_START_INDEX = 65
 
     def initialize(rows:, cols:, num_agents:, num_food:)
       @grid = Array.new(rows) { Array.new(cols) { EmptySquare.new } }
@@ -19,14 +19,16 @@ module Entities
     end
 
     def initialize_agents(num_agents)
+      index = 0
       while num_agents.positive?
         row = rand(grid.count)
         col = rand(grid[0].count)
         next unless grid[row][col].is_a? EmptySquare
 
-        agent = Agent.new(name: (num_agents + NAME_START_INDEX).chr)
+        agent = Agent.new(name: (index + NAME_START_INDEX).chr)
         agents << agent
         grid[row][col] = agent
+        index += 1
         num_agents -= 1
       end
     end
@@ -52,6 +54,9 @@ module Entities
 
     def turn
       agents.each do |agent|
+        # TODO this seems to be skipping more than intended
+        next unless agent.alive
+
         # iterating over agents sorted by fastest, so we need to find where it is on the grid
         row_idx, col_idx = find(agent)
 
@@ -71,6 +76,7 @@ module Entities
         puts to_s
         sleep(1)
       end
+      @agents = agents.select(&:alive)
     end
 
     # clears out a tile while keeping its "seen" value
@@ -86,7 +92,7 @@ module Entities
           return row_idx, col_idx
         end
       end
-      raise StandardError("Tile not found: #{tile}")
+      raise StandardError, "Tile not found: #{tile}"
     end
 
     def mark_seen(row, col, radius)

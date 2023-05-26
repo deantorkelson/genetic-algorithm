@@ -27,5 +27,5 @@ class Director
   end
 end
 
-Director.new(rows: 10, cols: 10, num_agents: 1, num_food: 10)
+Director.new(rows: 2, cols: 2, num_agents: 2, num_food: 0)
 puts 'done'
