@@ -7,7 +7,8 @@ module Entities
 
     attr_accessor :alive, :name, :color, :genes
 
-    def initialize(name:, seed_genes: { sight: 2 })
+    def initialize(name:, seed_genes: nil)
+      seed_genes ||= { sight: 2 }
       @alive = true
       @name = name
       @color = COLORS[rand(COLORS.size)]

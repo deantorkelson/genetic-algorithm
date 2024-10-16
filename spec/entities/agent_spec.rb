@@ -4,8 +4,8 @@ require_relative '../spec_helper'
 
 describe Entities::Agent do
   describe '.action' do
-    let(:agent) { Entities::Agent.new(name: 'A', genes: genes) }
     let(:genes) { { sight: 1, move: 1 } }
+    let(:agent) { Entities::Agent.new(name: 'A', seed_genes: genes) }
     let(:grid) { Array.new(3) { Array.new(3) { Entities::EmptySquare.new } } }
 
     context 'when agent is dead' do

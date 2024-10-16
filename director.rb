@@ -10,22 +10,29 @@ loader = Zeitwerk::Loader.new
 loader.push_dir("#{__dir__}/src")
 loader.setup
 
-TURNS = 10
+TURNS = 100
+$debug = false
+$debug_delay = 0.2
 
 class Director
   def initialize(rows:, cols:, num_agents:, num_food:)
     field = ::Entities::Field.new(rows: rows, cols: cols, num_agents: num_agents, num_food: num_food)
-    puts '--INITIAL--'
-    puts field
+    if $debug
+      puts '--INITIAL--'
+      puts field
+    end
     turn = 1
     TURNS.times do
       field.turn
-      puts "--TURN #{turn}--"
+      if $debug
+        puts "--TURN #{turn}--"
+        puts field
+      end
       turn += 1
-      puts field
     end
   end
 end
 
-Director.new(rows: 2, cols: 2, num_agents: 2, num_food: 0)
+Director.new(rows: 10, cols: 20, num_agents: 30, num_food: 20)
+# Director.new(rows: 1, cols: 5, num_agents: 1, num_food: 0)
 puts 'done'
