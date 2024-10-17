@@ -13,7 +13,6 @@ module Entities
     def initialize(rows:, cols:, num_agents:, num_food:, seed_genes: nil)
       @grid = Array.new(rows) { Array.new(cols) { EmptySquare.new } }
       @agents = []
-      # TODO rectangular grids don't work
       initialize_agents(num_agents, seed_genes)
       initialize_food(num_food)
       initialize_seen
@@ -67,7 +66,7 @@ module Entities
         if $debug
           puts "---After agent #{agent.name}'s turn---"
           puts to_s
-          sleep($debug_delay)
+          sleep($print_delay)
         end
       end
       if $debug
