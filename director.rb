@@ -12,22 +12,19 @@ loader.setup
 
 TURNS = 100
 $debug = false
-$debug_delay = 0.2
+$print_delay = 1
 
 class Director
   def initialize(rows:, cols:, num_agents:, num_food:)
     field = ::Entities::Field.new(rows: rows, cols: cols, num_agents: num_agents, num_food: num_food)
-    if $debug
-      puts '--INITIAL--'
-      puts field
-    end
+    puts '--INITIAL--'
+    puts field
     turn = 1
     TURNS.times do
       field.turn
-      if $debug
-        puts "--TURN #{turn}--"
-        puts field
-      end
+      puts "--TURN #{turn}--"
+      puts field
+      sleep($print_delay)
       turn += 1
     end
   end
