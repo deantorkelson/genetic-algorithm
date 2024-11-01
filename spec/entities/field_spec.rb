@@ -108,7 +108,7 @@ describe Entities::Field do
     end
 
     it 'moving an agent handles updating seen values' do
-      field = Entities::Field.new(rows: 3, cols: 3, num_agents: 1, seed_genes: { sight: 1 }, num_food: 0)
+      field = Entities::Field.new(rows: 3, cols: 3, num_agents: 1, seed_genes_options: [{ sight: 1 }], num_food: 0)
       agent = field.agents.first
       target_tile = field.grid[0][0]
       allow(agent).to receive(:action).with(field.grid, 1, 1).and_return(target_tile)
@@ -128,6 +128,19 @@ describe Entities::Field do
       expect(field.grid[1][1].seen_count).to eq(0)
       expect(field.grid[2][1].seen_count).to eq(0)
       expect(field.grid[1][2].seen_count).to eq(0)
+    end
+
+    it 'handles field updates when one agent eliminates another' do
+      field = Entities::Field.new(rows: 2, cols: 2, num_agents: 2, seed_genes_options: [{ sight: 2 }], num_food: 0)
+      living_agent = field.agents[0]
+      dying_agent = field.agents[1]
+
+      field.turn
+      
+      expect(field.grid[1][0]).to eq(living_agent)
+      expect(field.grid[1][1]).to be_a(Entities::EmptySquare)
+      expect(field.agents).to eq([living_agent])
+      expect(field.dead_agents).to eq([dying_agent])
     end
   end
 

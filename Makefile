@@ -1,5 +1,5 @@
 run:
-	ruby director.rb
+	ruby src/runner.rb
 
 test:
 	rspec spec/

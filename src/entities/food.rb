@@ -5,7 +5,7 @@
 module Entities
   class Food < Tile
     def to_s
-      super('')
+      super('✿')
     end
   end
 end

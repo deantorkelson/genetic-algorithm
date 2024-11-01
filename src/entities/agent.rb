@@ -5,13 +5,14 @@ module Entities
   class Agent < Tile
     COLORS = %i[red green light_green yellow blue magenta light_magenta cyan light_cyan].freeze
 
-    attr_accessor :alive, :name, :color, :genes
+    attr_accessor :alive, :name, :color, :genes, :score
 
     def initialize(name:, seed_genes: nil)
       seed_genes ||= { sight: 2 }
       @alive = true
       @name = name
       @color = COLORS[rand(COLORS.size)]
+      @score = 0
       initialize_genes(seed_genes)
       super()
       # eventually this should have sight (view distance)
@@ -35,8 +36,7 @@ module Entities
       return unless alive
 
       # agent will look around and decide on an action
-      # MVP: moves in a random direction
-      # MVP: update grid state after moving (handled by field)
+      @score += 1
       neighbors = Field.get_neighbors(grid, row, col, sight)
       chosen_tile = nil
       neighbors.each do |tile|
@@ -60,7 +60,7 @@ module Entities
     end
 
     def eat
-      # TODO
+      @score += 5
     end
 
     def fight(other)
@@ -75,6 +75,10 @@ module Entities
       return false unless other.is_a? Agent
 
       @name == other.name
+    end
+
+    def <=>(other)
+      score <=> other.score
     end
   end
 end

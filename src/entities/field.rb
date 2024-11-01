@@ -2,18 +2,20 @@
 
 # typed: true
 require 'colorize'
+require 'pry'
 
 module Entities
   class Field
 
-    attr_accessor :grid, :agents
+    attr_accessor :grid, :agents, :dead_agents
 
     NAME_START_INDEX = 65
 
-    def initialize(rows:, cols:, num_agents:, num_food:, seed_genes: nil)
+    def initialize(rows:, cols:, num_agents:, num_food:, seed_genes_options: [])
       @grid = Array.new(rows) { Array.new(cols) { EmptySquare.new } }
       @agents = []
-      initialize_agents(num_agents, seed_genes)
+      @dead_agents = []
+      initialize_agents(num_agents, seed_genes_options.sample)
       initialize_food(num_food)
       initialize_seen
     end
@@ -74,6 +76,7 @@ module Entities
         puts "living agents: #{agents.select(&:alive).map(&:name).join(', ')}"
         puts "killed agents: #{agents.reject(&:alive).map(&:name).join(', ')}"
       end
+      @dead_agents = dead_agents + agents.select { |agent| !agent.alive }
       @agents = agents.select(&:alive)
     end
 
@@ -122,6 +125,7 @@ module Entities
     # gets neighbors within `radius` units, using Euclidean distance
     def self.get_neighbors(grid, row, col, radius)
       neighbors = []
+      radius = radius.round
       (col - radius..col + radius).each do |x|
         (row - radius..row + radius).each do |y|
           # calculate distance between current cell and center point
