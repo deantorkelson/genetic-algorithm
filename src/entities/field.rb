@@ -122,7 +122,7 @@ module Entities
       Field.get_neighbors(grid, row, col, radius).map(&:unsee)
     end
 
-    # gets neighbors within `radius` units, using Euclidean distance
+    # gets neighbors within `radius` units, using Euclidean distance, including the tile itself
     def self.get_neighbors(grid, row, col, radius)
       neighbors = []
       radius = radius.round

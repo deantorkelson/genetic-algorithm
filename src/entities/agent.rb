@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 require 'colorize'
+MUTATION_FACTOR = 0.3
+
 
 module Entities
   class Agent < Tile
@@ -20,8 +22,13 @@ module Entities
     end
 
     def initialize_genes(seed_genes)
-      @genes = seed_genes
+      @genes = mutate_seeds(seed_genes)
       # TODO - add energy, this will enable eat and fight
+    end
+
+    def mutate_seeds(seed)
+      mutations = [1 + MUTATION_FACTOR, 1 - MUTATION_FACTOR]
+      seed.transform_values { |value| (value * mutations.sample).round(4) }
     end
 
     def sight

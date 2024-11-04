@@ -81,24 +81,24 @@ describe Entities::Field do
 
   describe '.neighbors' do
     it 'returns all neighbors' do
-      neighbors = Field.get_neighbors(field, 1, 1, 2)
-      expect(neighbors.count).to eq(8)
+      neighbors = Entities::Field.get_neighbors(field.grid, 1, 1, 1)
+      expect(neighbors.count).to eq(5)
+      expect(neighbors).to include(field.grid[0][1])
+      expect(neighbors).to include(field.grid[1][0])
+      expect(neighbors).to include(field.grid[1][1])
+      expect(neighbors).to include(field.grid[1][2])
+      expect(neighbors).to include(field.grid[2][1])
+    end
+
+    it 'respects field boundaries' do
+      neighbors = Entities::Field.get_neighbors(field.grid, 0, 0, 2)
+      expect(neighbors.count).to eq(6)
       expect(neighbors).to include(field.grid[0][0])
       expect(neighbors).to include(field.grid[0][1])
       expect(neighbors).to include(field.grid[0][2])
       expect(neighbors).to include(field.grid[1][0])
-      expect(neighbors).to include(field.grid[1][2])
-      expect(neighbors).to include(field.grid[2][0])
-      expect(neighbors).to include(field.grid[2][1])
-      expect(neighbors).to include(field.grid[2][2])
-    end
-
-    it 'respects field boundaries' do
-      neighbors = field.neighbors(0, 0)
-      expect(neighbors.count).to eq(3)
-      expect(neighbors).to include(field.grid[0][1])
-      expect(neighbors).to include(field.grid[1][0])
       expect(neighbors).to include(field.grid[1][1])
+      expect(neighbors).to include(field.grid[2][0])
     end
   end
 
@@ -137,7 +137,7 @@ describe Entities::Field do
 
       field.turn
       
-      expect(field.grid[1][0]).to eq(living_agent)
+      expect(field.grid[0][1]).to eq(living_agent)
       expect(field.grid[1][1]).to be_a(Entities::EmptySquare)
       expect(field.agents).to eq([living_agent])
       expect(field.dead_agents).to eq([dying_agent])
