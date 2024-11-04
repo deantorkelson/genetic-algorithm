@@ -15,18 +15,18 @@ module Entities
       @grid = Array.new(rows) { Array.new(cols) { EmptySquare.new } }
       @agents = []
       @dead_agents = []
-      initialize_agents(num_agents, seed_genes_options.sample)
+      initialize_agents(num_agents, seed_genes_options)
       initialize_food(num_food)
       initialize_seen
     end
 
-    def initialize_agents(num_agents, seed_genes)
+    def initialize_agents(num_agents, seed_gene_options)
       index = 0
       while num_agents.positive?
         row = rand(grid.count)
         col = rand(grid[0].count)
         if grid[row][col].is_a? EmptySquare
-          agent = Agent.new(name: (index + NAME_START_INDEX).chr, seed_genes: seed_genes)
+          agent = Agent.new(name: (index + NAME_START_INDEX).chr, seed_gene_options: seed_gene_options)
           agents << agent
           grid[row][col] = agent
           index += 1
@@ -56,7 +56,8 @@ module Entities
     end
 
     def turn
-      agents.each do |agent|
+      agents_in_turn_order = agents.sort_by { |agent| agent.speed }.reverse
+      agents_in_turn_order.each do |agent|
         next unless agent.alive
 
         # iterating over agents sorted by fastest, so we need to find where it is on the grid

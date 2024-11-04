@@ -24,10 +24,9 @@ class Director
   def run
     round = 1
     # seeds holds the top genes from the previous round. used as seeds for the next generation
-    seeds = []
+    seeds = [{ genes: { sight: 2, speed: 100 }, score: 1 }]
     ROUNDS.times do
-      # TODO why is sight tending towards zero?
-      puts "New seeds #{seeds}"
+      puts "New seeds #{seeds.map{|seed_option| seed_option[:genes]}}"
       sleep(3)
       field = ::Entities::Field.new(rows: rows, cols: cols, num_agents: num_agents, num_food: num_food, seed_genes_options: seeds)
       puts "--ROUND #{round} STARTING--"
@@ -42,12 +41,12 @@ class Director
       end
       all_agents = (field.agents + field.dead_agents).sort.reverse
       top_agents = all_agents.first(3)
-      seeds = top_agents.map(&:genes)
+      seeds = top_agents.map { |agent| { genes: agent.genes, score: agent.score }}
       puts "--ROUND #{round} OVER!--"
       puts "Top Agents : Score : Genes"
       puts all_agents.map { |agent| "#{agent.name} : #{agent.score} : #{agent.genes}"}
       sleep(3) if $debug
-      puts "Seeding with #{seeds}"
+      puts "Winning genes + score #{seeds}"
       sleep(2) if $debug
       round += 1
     end

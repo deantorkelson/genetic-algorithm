@@ -9,21 +9,27 @@ module Entities
 
     attr_accessor :alive, :name, :color, :genes, :score
 
-    def initialize(name:, seed_genes: nil)
-      seed_genes ||= { sight: 2 }
+    def initialize(name:, seed_gene_options:)
       @alive = true
       @name = name
       @color = COLORS[rand(COLORS.size)]
-      @score = 0
-      initialize_genes(seed_genes)
+      @score = 1
+      initialize_genes(seed_gene_options)
       super()
-      # eventually this should have sight (view distance)
-      # also speed (turn priority)
     end
 
-    def initialize_genes(seed_genes)
+    def initialize_genes(seed_gene_options)
+      seed_genes = weighted_gene_sample(seed_gene_options)
       @genes = mutate_seeds(seed_genes)
-      # TODO - add energy, this will enable eat and fight
+      # TODO - add energy, this will give cost and reward for eating and fighting
+    end
+
+    def weighted_gene_sample(seed_gene_options)
+      total_score = seed_gene_options.sum { |seed| seed[:score] }
+      weights = seed_gene_options.map { |seed| seed[:score].to_f / total_score }
+      genes_with_weights = seed_gene_options.map{ |option| option[:genes] }.zip(weights).to_h
+
+      genes_with_weights.max_by { |_, weight| rand ** (1.0 / weight) }.first
     end
 
     def mutate_seeds(seed)
@@ -33,6 +39,10 @@ module Entities
 
     def sight
       genes[:sight]
+    end
+
+    def speed
+      genes[:speed]
     end
 
     def eliminate
