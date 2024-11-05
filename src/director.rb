@@ -5,7 +5,7 @@
 require 'pry'
 
 $debug = false
-$print_delay = 0.00
+$print_delay = 0.50
 
 class Director
   ROUNDS = 100
